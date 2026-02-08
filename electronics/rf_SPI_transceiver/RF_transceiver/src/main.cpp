@@ -1,13 +1,24 @@
+
 #include <Arduino.h>
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
+RF24 radio(9, 10);  // CE, CSN
+
+const byte address[6] = "00001";
 
 void setup() {
-  
-  pinMode(LED_BUILTIN, OUTPUT);
+  Serial.begin(9600);
+  radio.begin();
+  radio.openWritingPipe(address);
+  radio.setPALevel(RF24_PA_LOW);
+  radio.stopListening();
 }
 
 void loop() {
-  digitalWrite(LED_BUILTIN, HIGH);   
-  delay(1000);                       
-  digitalWrite(LED_BUILTIN, LOW);    
-  delay(1000);                       
+  const char text[] = "Hello World";
+  radio.write(&text, sizeof(text));
+  Serial.println("Sent: Hello World");
+  delay(1000);
 }
