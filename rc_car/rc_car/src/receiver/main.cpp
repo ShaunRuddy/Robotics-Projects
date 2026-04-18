@@ -39,27 +39,31 @@ void loop() {
         char msg[32];
         radio.read(msg, sizeof(msg));
 
-        // Parse the comma-separated values
         int speed, steering_1, steering_2;
         sscanf(msg, "%d,%d,%d", &speed, &steering_1, &steering_2);
 
-        Serial.println("Speed: " + String(speed) + " Steering 1: " + String(steering_1) + " Steering 2: " + String(steering_2));
+        Serial.println("Speed: " + String(speed) +
+                       " Steering 1: " + String(steering_1) +
+                       " Steering 2: " + String(steering_2));
 
+        // Direction control
         if (speed > 0) {
             digitalWrite(IN1, HIGH);
             digitalWrite(IN2, LOW);
         } else if (speed < 0) {
             digitalWrite(IN1, LOW);
             digitalWrite(IN2, HIGH);
-            speed = -speed;
+            speed = -speed; // make positive for analogWrite
         } else {
             digitalWrite(IN1, LOW);
             digitalWrite(IN2, LOW);
         }
-        analogWrite(EN, speed);
+
+        analogWrite(EN, constrain(speed, 0, 255));
 
         int angle = map(steering_2, 0, 1023, 0, 180);
-        angle = constrain(angle, 50, 130); //90 is center, 20 degrees in either direction
+        angle = constrain(angle, 50, 130);
         Servo1.write(angle);
     }
 }
+

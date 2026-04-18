@@ -22,21 +22,20 @@ void setup() {
 
 //Speed is determined by two potentiometers. On potentiometer is to simulate gas and the other to simulate breaking. The gas - break determines the speed.
 void loop() {
-      int gas = analogRead(A0);
-      int reverse = analogRead(A1);
-      
-      int steering_1 = analogRead(A2);
-      int steering_2 = analogRead(A3); //One of these steerings will be chosen. just depends on design orientation of the potentiometer.
+    int gas = analogRead(A0);
+    int reverse = analogRead(A1);
+    int steering_1 = analogRead(A2);
+    int steering_2 = analogRead(A3);
 
-      float percentage_go = (gas - reverse) / 1023.0;
+    float percentage = (gas - reverse) / 1023.0;
+    int speed = (int)(percentage * 255);
+    speed = constrain(speed, -255, 255); // safety clamp
 
-      int8_t speed = (int)(percentage_go * 255);
-      // Serial.println((String)"Forward: " + gas + " Reverse: " + reverse +  "  Actual Speed: " + speed);
-      Serial.println("Speed: " + String(speed) + " Steering 1: " + String(steering_1) + " Steering 2: " + String(steering_2));
-      char msg[32];
-      snprintf(msg, sizeof(msg), "%d,%d,%d", speed, steering_1, steering_2);
-      radio.write(msg, sizeof(msg));
+    Serial.println("Speed: " + String(speed) +
+                   " Steering 1: " + String(steering_1) +
+                   " Steering 2: " + String(steering_2));
 
-   
+    char msg[32];
+    snprintf(msg, sizeof(msg), "%d,%d,%d", speed, steering_1, steering_2);
+    radio.write(msg, sizeof(msg));
 }
-
