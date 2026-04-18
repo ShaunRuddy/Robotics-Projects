@@ -15,8 +15,7 @@ const int IN1 = 2;
 const int IN2 = 3;
 const int EN = 5;
 
-
-const int servo_pin = 10;
+const int servo_pin = 7;
 
 Servo Servo1;
 
@@ -58,5 +57,9 @@ void loop() {
             digitalWrite(IN2, LOW);
         }
         analogWrite(EN, speed);
+
+        int angle = map(steering_2, 0, 1023, 0, 180);
+        angle = constrain(angle, 50, 130); //90 is center, 20 degrees in either direction
+        Servo1.write(angle);
     }
 }
