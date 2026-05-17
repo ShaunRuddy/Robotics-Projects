@@ -12,8 +12,14 @@ RF24 radio(CE_pin, CSN_pin); // CE, CSN pins
 const byte address[6] = "00001";
 void setup() {
   Serial.begin(115200);
+  
   int i = radio.begin();
   Serial.print(i); // 1-> init success, 0-> init failure
+  if (i == 1){
+    Serial.println("Radio initialized successfully!");
+  }else{
+    Serial.println("Radio initialization failed!");
+  }
   radio.openWritingPipe(address);
   radio.setPALevel(RF24_PA_LOW);
   radio.stopListening();
@@ -22,6 +28,7 @@ void setup() {
 
 //Speed is determined by two potentiometers. On potentiometer is to simulate gas and the other to simulate breaking. The gas - break determines the speed.
 void loop() {
+    Serial.println("Entered Loop");
     int gas = analogRead(A0);
     int reverse = analogRead(A1);
     int steering_1 = analogRead(A2);

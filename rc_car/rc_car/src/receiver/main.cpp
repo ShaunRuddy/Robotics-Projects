@@ -62,7 +62,7 @@ void loop() {
         analogWrite(EN, constrain(speed, 0, 255));
 
         int angle = map(steering_2, 0, 1023, 0, 180);
-        angle = constrain(angle, 50, 130);
+        angle = constrain(angle, 50, 145);
         Servo1.write(angle);
     }
 }
